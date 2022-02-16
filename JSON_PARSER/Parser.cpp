@@ -38,6 +38,10 @@ void Parser::parse()
 
 void Parser::print() const
 {
+	if (nullptr != root)
+	{
+		root->print();
+	}
 }
 
 /*

@@ -6,7 +6,11 @@ using namespace std;
 class JsonNode
 {
 public:
+
 	~JsonNode();
+
+	//deep- глубина текущей ноды дл€ табул€ции
+	void print(int deep) const;
 //private:
 	/*ќпределим дл€ каждого типа данных место хранени€ используем ассатиативный массив дл€ хранени€ узлов
 	ќбъекты object  и array, €вл€ютс€ сложными объектами, внутри которых содержатьс€ другие объекты.
@@ -54,4 +58,18 @@ public:
 	/*Noda это объект, а так как это объект то он может быть равен nullptr*/
 
 	bool isNull = false;
+
+private:
+
+	void printStrings(int deep) const;
+
+	void printNumbers(int deep) const;
+
+	void printFlags(int deep) const;
+
+	void printObjects(int deep) const;
+
+	void printArrays(int deep) const;
+
+	void printTab(int deep) const;
 };
