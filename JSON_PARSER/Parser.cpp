@@ -11,6 +11,17 @@ Parser::Parser(const char* source)
 	//итератор показывающий на каком индексе мы остановились. Парсинг начинаем с нуля
 	currentIndex = 0ULL;
 	 
+	root = nullptr;
+}
+
+Parser::~Parser()
+{
+	//Если root не нулевой
+	if (nullptr != root)
+	{
+		//то удаляем root? а он уже потрет все что входит внутри
+		delete root;
+	}
 }
 
 /*
@@ -40,7 +51,8 @@ void Parser::print() const
 {
 	if (nullptr != root)
 	{
-		root->print();
+		//начинаем с нулевого уровня вложенности
+		root->print(0);
 	}
 }
 
@@ -165,7 +177,7 @@ void Parser::parseString(JsonNode* current, string name)
 	if ("true" == value  ||  "True" == value || "TRUE" == value )
 	{
 		//беррем массив flags и вызываем у него метод emplace указываем имя нашего поля, которое мы парсим и значение, в данном случае true 
-		current->flags.emplace(name,true);
+		current->flags.emplace(name, true);
 	}
 
 	else if ("false" == value || "False" == value || "FALSE" == value)
@@ -185,7 +197,7 @@ void Parser::parseString(JsonNode* current, string name)
 		JsonNode* node = new JsonNode();
 		node->name = name;
 		node->isNull = true;
-		current->object.emplace(name, node);
+		current->objects.emplace(name, node);
 	}
 
 	/*
@@ -241,7 +253,7 @@ void Parser::parseNext(JsonNode* parent, string name)
 
 		node->name = name;
 		//добавляем внов созданную ноду как наследника
-		parent->object.emplace(name, node);
+		parent->objects.emplace(name, node);
 		//вызовем уже созданный ранее метод parseObject, и он погрузиться на 1 уровень рекурсии и будет это делать для более глубокого уровня
 		//и так до тех пор пока не исчерпаются уровни глубины
 		parseObject(node);
@@ -251,7 +263,7 @@ void Parser::parseNext(JsonNode* parent, string name)
 	{
 		JsonNode* node = new JsonNode();
 		node->isArray = true;
-		parent->object.emplace(name, node);
+		parent->arrays.emplace(name, node);
 		parseArray(node);
 	}break;
 
